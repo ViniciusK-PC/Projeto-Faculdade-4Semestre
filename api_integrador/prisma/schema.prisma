@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Fabricante {
+  id          Int          @id @default(autoincrement())
+  nome        String       @db.VarChar(30)
+  ferramentas Ferramenta[]
+
+  @@map("fabricantes")
+}
+
+model Ferramenta {
+  id                  Int         @id @default(autoincrement())
+  modelo              String      @db.VarChar(60)
+  ano                 Int         @db.SmallInt
+  preco               Decimal     @db.Decimal(10, 2)
+  quantidadeEmEstoque Int         @db.MediumInt
+  destaque            Boolean     @default(true)
+  foto                String
+  acessorios          String? // Pode ser uma string com uma descrição dos acessórios disponíveis
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  tipo                StatusOrdem @default(APROVADA)
+  fabricante          Fabricante  @relation(fields: [fabricanteId], references: [id])
+  fabricanteId        Int
+  admin       Admin        @relation(fields: [adminId], references: [id])
+  adminId     Int          @default(1)
+  fotos               Foto[]
+  // ordens              OrdemDeCompra[]
+  Avaliacao           Avaliacao[]
+  Favorito            Favorito[]
+
+  @@map("ferramentas")
+}
+
+model Avaliacao {
+  id             Int        @id @default(autoincrement())
+  totalAvaliacao Int
+  estrelas       Int        @default(0)
+  comentario     String?    @db.VarChar(255)
+  ferramenta     Ferramenta @relation(fields: [ferramentaId], references: [id])
+  ferramentaId   Int
+  cliente        Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId      String     @db.VarChar(36)
+}
+
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  nome         String   @db.VarChar(60)
+  email        String   @db.VarChar(60) @unique
+  senha        String   @db.VarChar(60)   // senha deve ser varchar(60)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt  
+  ferramentas      Ferramenta[]
+  @@map("admins")
+}
+
+model Favorito {
+  id           Int        @id @default(autoincrement())
+  cliente      Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId    String     @db.VarChar(36)
+  ferramenta   Ferramenta @relation(fields: [ferramentaId], references: [id])
+  ferramentaId Int
+
+  @@map("favoritos")
+}
+
+model Foto {
+  id           Int        @id @default(autoincrement())
+  descricao    String     @db.VarChar(30)
+  codigoFoto   String     @db.LongText
+  ferramenta   Ferramenta @relation(fields: [ferramentaId], references: [id])
+  ferramentaId Int
+
+  @@map("fotos")
+}
+
+model Cliente {
+  id        String      @id @default(uuid()) @db.VarChar(36)
+  nome      String      @db.VarChar(60)
+  email     String      @unique @db.VarChar(60)
+  senha     String      @db.VarChar(60)
+  novaSenha String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  // ordens    OrdemDeCompra[]
+  Avaliacao Avaliacao[]
+  Favorito  Favorito[]
+
+  @@map("clientes")
+}
+
+// model OrdemDeCompra {
+//   id           Int         @id @default(autoincrement())
+//   cliente      Cliente     @relation(fields: [clienteId], references: [id])
+//   clienteId    String      @db.VarChar(36)
+//   ferramenta   Ferramenta  @relation(fields: [ferramentaId], references: [id])
+//   ferramentaId Int
+//   descricao    String      @db.VarChar(255)
+//   resposta     String?     @db.VarChar(255)
+//   status       StatusOrdem @default(PENDENTE)
+//   createdAt    DateTime    @default(now())
+//   updatedAt    DateTime    @updatedAt
+
+//   @@map("ordens_de_compra")
+// }
+
+enum StatusOrdem {
+  PENDENTE
+  APROVADA
+  REJEITADA
+}
+
+// model Marca {
+//   id        Int      @id @default(autoincrement())
+//   nome      String   @db.VarChar(30)
+//   carros    Carro[]
+//   @@map("marcas")
+// }
+
+// model Carro {
+//   id          Int      @id @default(autoincrement())
+//   modelo      String   @db.VarChar(60)
+//   ano         Int      @db.SmallInt
+//   preco       Decimal  @db.Decimal(10, 2)
+//   km          Int      @db.MediumInt
+//   destaque    Boolean  @default(true)
+//   foto        String   
+//   acessorios  String?
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   combustivel Combustiveis @default(FLEX)
+//   marca       Marca    @relation(fields: [marcaId], references: [id])
+//   marcaId     Int
+//   fotos       Foto[]
+//   propostas   Proposta[]
+//   @@map("carros")
+// }
+
+// model Foto {
+//   id          Int      @id @default(autoincrement())
+//   descricao   String   @db.VarChar(30)
+//   codigoFoto  String   @db.LongText
+//   carro       Carro    @relation(fields: [carroId], references: [id])
+//   carroId     Int
+//   @@map("fotos")
+// }
+
+// model Cliente {
+//   id           String   @db.VarChar(36) @id @default(uuid())
+//   nome         String   @db.VarChar(60)
+//   email        String   @db.VarChar(60) @unique
+//   senha        String   @db.VarChar(60)   // senha deve ser varchar(60)
+//   createdAt    DateTime @default(now())
+//   updatedAt    DateTime @updatedAt  
+//   propostas    Proposta[]
+//   @@map("clientes")
+// }
+
+// model Proposta {
+//   id          Int       @id @default(autoincrement())
+//   cliente     Cliente   @relation(fields: [clienteId], references: [id])
+//   clienteId   String    @db.VarChar(36)
+//   carro       Carro     @relation(fields: [carroId], references: [id])
+//   carroId     Int
+//   descricao   String    @db.VarChar(255)
+//   resposta    String?   @db.VarChar(255)
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt  
+//   @@map("propostas")
+// }
+
+// enum Combustiveis {
+//   FLEX
+//   GASOLINA
+//   ALCOOL
+//   DIESEL
+//   ELETRICIDADE
+// }
