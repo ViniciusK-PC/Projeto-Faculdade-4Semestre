@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api_exemplo
+      dockerfile: Dockerfile
+    volumes:
+      - ./api_exemplo/node:/app/node
+      - ./api_exemplo/routes:/app/routes
+      - ./api_exemplo/prisma:/app/prisma
+    ports:
+      - "3004:3004"
+    environment:
+      - DATABASE_URL="mysql://root:84471814@db:3306/texttp"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./front_ex
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    environment:
+      - NEXT_PUBLIC_URL_API="http://api_exemplo:3004"
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 84471814
+      MYSQL_DATABASE: texttp
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: 84471814
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:                     # Adicionando ports aqui
+      - "3307:3306"
+
+volumes:
+  db_data:
