@@ -38,7 +38,10 @@ export default function Home() {
     } else if (response.status == 400) {
       toast.error("Erro... Login ou senha incorretos")
     } 
+    
   }
+
+
 
   return (
     <main className="max-w-screen-xl flex flex-col items-center mx-auto p-6">

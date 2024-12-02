@@ -1,6 +1,6 @@
 "use client"
 import { Ferramenta } from "@/utils/types/ferramentas";
-import { Comentario } from "@/utils/types/comentarios";
+//simport { Comentario } from "@/utils/types/comentarios";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import { useClienteStore } from "@/context/cliente";

@@ -2,8 +2,8 @@
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { Titulo } from "../components/Titulo";
-import { MenuLateral } from "../components/MenuLateral";
+import { Titulo } from "@/components/Titulo"
+import { MenuLateral } from "@/components/MenuLateral";
 
 export default function RootLayout({
   children,

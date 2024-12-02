@@ -26,7 +26,8 @@ http://localhost:3004/ferramentas
 }
 
 # .env
-DATABASE_URL="mysql://root:84471814@localhost:3306/texttp"
+DATABASE_URL="mysql://root:5833@localhost:3306/api24"
+JWT_KEY="sldakjivgtbhalkjiuhytf"x
 
 # .env.local
 NEXT_PUBLIC_URL_API="http://localhost:3004"

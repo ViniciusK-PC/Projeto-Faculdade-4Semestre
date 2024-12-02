@@ -29,7 +29,7 @@ export default function Principal() {
     getDadosGerais()
 
     async function getDadosGrafico() {
-      const response = await fetch("http://localhost:3004/dashboard/ferramentasFabricantes")
+      const response = await fetch("http://localhost:3004/dashboard/ferramentas/Fabricantes")
       const dados = await response.json()
       setFerramentaFabricante(dados)
     }
@@ -48,7 +48,7 @@ export default function Principal() {
 
   return (
     <div className="container">
-      <h2 className="text-3xl mb-4 font-bold">Visão Geral do Sistema</h2>
+      <h2 className="text-3xl mt-24 font-bold">Visão Geral do Sistema</h2>
 
       <div className="w-2/3 flex justify-between mx-auto mb-5">
         <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
